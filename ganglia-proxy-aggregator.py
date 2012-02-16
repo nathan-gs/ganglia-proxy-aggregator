@@ -60,7 +60,7 @@ class reqHandler(SocketServer.StreamRequestHandler):
     with_header = True
     
     for host, port in self.nodes.iteritems():
-      queryGmond(host, gmondport = port, queryHeader = with_header)
+      self.qos.append(queryGmond(host, gmondport = port, queryHeader = with_header))
       with_header = False
       
     self.wfile = self.request.makefile("wb", 0)
