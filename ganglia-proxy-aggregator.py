@@ -85,8 +85,8 @@ class CliConfiguration:
     
     argParser = argparse.ArgumentParser(description="Ganglia Proxy")
     argParser.add_argument('nodes', nargs='+', metavar='nodes', help="Specify the nodes.")
-    argParser.add_argument('--server-port', dest='server-port', default=8666, type=int )
-    argParser.add_argument('--default-port', dest='default-port', default=8649, type=int )
+    argParser.add_argument('--server-port', dest='server_port', default=8666, type=int )
+    argParser.add_argument('--default-port', dest='default_port', default=8649, type=int )
     
     args = argParser.parse_args()
     
