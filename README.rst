@@ -10,5 +10,12 @@ Usage::
 Credits
 ~~~~~~~
 
+Fork of ganglia-multicast-hack, found on http://code.google.com/p/ganglia-multicast-hack/
+
 Antti Vanne <antti.vanne@iki.fi>
 Nathan Bijnens <nathan@nathan.gs>
+
+License
+~~~~~~~
+
+Distributed under a New BSD LICENSE, see LICENSE for details.
