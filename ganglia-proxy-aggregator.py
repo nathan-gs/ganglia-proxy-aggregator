@@ -57,7 +57,7 @@ class reqHandler(SocketServer.StreamRequestHandler):
   
   def setup(self):
     self.qos = []
-    with_header = true
+    with_header = True
     
     for host, port in self.nodes.iteritems():
       queryGmond(host, gmondport = port, queryHeader = with_header)
