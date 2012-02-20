@@ -14,7 +14,7 @@
 import SocketServer
 import socket
 import argparse
-import libxml2
+import xml.dom.minidom
 
 class queryGmond:
   """Query individual nodes for gmond data and optionally gmond header"""
@@ -56,23 +56,23 @@ class reqHandler(SocketServer.StreamRequestHandler):
     doc = None
     cluster = None
     
+    not_first = True
+    
     for qo in self.qos: # run and wait queries this is faster
-      newdoc = libxml2.parseDoc(qo.run())
-      newcluster = newdoc.getRootElement().children
+      newdoc = xml.dom.minidom.parseString(go.run())
       
-      if newcluster:
-        if not cluster:
-          if self.cluster_name:
-            newcluster.setProp("NAME",self.cluster_name)
-          
-          doc = newdoc
-          cluster = newcluster
-          
-        else:
-          cluster.addChildList(newcluster.children.copyNodeList())
-          newdoc.freeDoc()
+      if not not_first:
+        doc = newdoc
+        cluster = doc.getElementByTagName('CLUSTER')[0]
+        if self.cluster_name:
+            cluster.setAttribute('NAME', self.cluster_name)
+        
       
-    self.wfile.write(doc)
+      if not_first:
+        for host in newdoc.getElementByTagName('HOST'):
+          cluster.appendChild(host)
+      
+    self.wfile.write(doc.toxml())
     
   def finish(self):
     self.wfile.flush()
