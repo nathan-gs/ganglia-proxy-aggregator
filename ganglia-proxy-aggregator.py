@@ -63,13 +63,13 @@ class reqHandler(SocketServer.StreamRequestHandler):
       
       if not not_first:
         doc = newdoc
-        cluster = doc.getElementByTagName('CLUSTER')[0]
+        cluster = doc.getElementsByTagName('CLUSTER')[0]
         if self.cluster_name:
             cluster.setAttribute('NAME', self.cluster_name)
         
       
       if not_first:
-        for host in newdoc.getElementByTagName('HOST'):
+        for host in newdoc.getElementsByTagName('HOST'):
           cluster.appendChild(host)
       
     self.wfile.write(doc.toxml())
