@@ -59,7 +59,7 @@ class reqHandler(SocketServer.StreamRequestHandler):
     not_first = True
     
     for qo in self.qos: # run and wait queries this is faster
-      newdoc = xml.dom.minidom.parseString(go.run())
+      newdoc = xml.dom.minidom.parseString(qo.run())
       
       if not not_first:
         doc = newdoc
