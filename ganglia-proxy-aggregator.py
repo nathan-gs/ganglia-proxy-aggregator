@@ -86,7 +86,7 @@ class CliConfiguration:
     argParser.add_argument('nodes', nargs='+', metavar='nodes', help="Specify the nodes.")
     argParser.add_argument('--server-port', dest='server_port', default=8666, type=int )
     argParser.add_argument('--default-port', dest='default_port', default=8649, type=int )
-    argParser.add_argument('--cluster-name', dest='cluster_name', default=None, type=string )
+    argParser.add_argument('--cluster-name', dest='cluster_name', default=None )
     
     args = argParser.parse_args()
     
