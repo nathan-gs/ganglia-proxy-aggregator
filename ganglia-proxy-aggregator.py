@@ -61,7 +61,7 @@ class reqHandler(SocketServer.StreamRequestHandler):
       newcluster = newdoc.getRootElement().children
       
       if newcluster:
-        if not root:
+        if not cluster:
           if self.cluster_name:
             newcluster.setProp("NAME",self.cluster_name)
           
