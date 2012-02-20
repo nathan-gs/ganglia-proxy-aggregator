@@ -54,23 +54,22 @@ class reqHandler(SocketServer.StreamRequestHandler):
     
   def handle(self):
     doc = None
-    root = None
+    cluster = None
     
     for qo in self.qos: # run and wait queries this is faster
       newdoc = libxml2.parseDoc(qo.run())
-      newroot = newdoc.getRootElement()
+      newcluster = newdoc.getRootElement().children
       
-      if newroot:
+      if newcluster:
         if not root:
           if self.cluster_name:
-            newroot.setProp("NAME",self.cluster_name)
+            newcluster.setProp("NAME",self.cluster_name)
           
           doc = newdoc
-          root = newroot
-          
+          cluster = newcluster
           
         else:
-          root.addChildList(newroot.children.copyNodeList())
+          cluster.addChildList(newcluster.children.copyNodeList())
           newdoc.freeDoc()
       
     self.wfile.write(doc)
