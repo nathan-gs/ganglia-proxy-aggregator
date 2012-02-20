@@ -113,5 +113,11 @@ reqHandler.nodes = configuration.nodes
 reqHandler.cluster_name = configuration.cluster_name
 
 s = SocketServer.TCPServer( ("", configuration.server_port), reqHandler)
-s.serve_forever()
+
+try:
+  s.serve_forever()
+except KeyboardInterrupt:
+  s.server_close()
+
+
 
