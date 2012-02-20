@@ -110,7 +110,7 @@ class CliConfiguration:
   
 configuration = CliConfiguration()
 reqHandler.nodes = configuration.nodes
-regHandler.cluster_name = configuration.cluster_name
+reqHandler.cluster_name = configuration.cluster_name
 
 s = SocketServer.TCPServer( ("", configuration.server_port), reqHandler)
 s.serve_forever()
