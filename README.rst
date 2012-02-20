@@ -6,6 +6,11 @@ Usage::
     ./ganglia-proxy-aggregator.py node01:8649 node02 nodeN:8649
     
 
+Dependencies
+~~~~~~~~~~~~
+
+- Python >2.6
+- libxml2 Python bindings.
     
 Credits
 ~~~~~~~
