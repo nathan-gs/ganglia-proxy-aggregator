@@ -56,7 +56,7 @@ class reqHandler(SocketServer.StreamRequestHandler):
     doc = None
     cluster = None
     
-    not_first = True
+    not_first = False
     
     for qo in self.qos: # run and wait queries this is faster
       newdoc = xml.dom.minidom.parseString(qo.run())
@@ -66,7 +66,8 @@ class reqHandler(SocketServer.StreamRequestHandler):
         cluster = doc.getElementsByTagName('CLUSTER')[0]
         if self.cluster_name:
             cluster.setAttribute('NAME', self.cluster_name)
-        
+            
+        not_first = True
       
       if not_first:
         for host in newdoc.getElementsByTagName('HOST'):
