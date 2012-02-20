@@ -62,8 +62,13 @@ class reqHandler(SocketServer.StreamRequestHandler):
       
       if newroot:
         if not root:
+          if self.cluster_name:
+            newroot.setProp("NAME",self.cluster_name)
+          
           doc = newdoc
           root = newroot
+          
+          
         else:
           root.addChildList(newroot.children.copyNodeList())
           newdoc.freeDoc()
@@ -81,11 +86,13 @@ class CliConfiguration:
     argParser.add_argument('nodes', nargs='+', metavar='nodes', help="Specify the nodes.")
     argParser.add_argument('--server-port', dest='server_port', default=8666, type=int )
     argParser.add_argument('--default-port', dest='default_port', default=8649, type=int )
+    argParser.add_argument('--cluster-name', dest='cluster_name', default=None, type=string )
     
     args = argParser.parse_args()
     
     self.nodes = self._parse_nodes(args.nodes, args.default_port)
     self.server_port = args.server_port
+    self.cluster_name = args.cluster_name
     
   def _parse_nodes(self, nodes, default_port):
     nodes_with_ports = {}
@@ -103,6 +110,7 @@ class CliConfiguration:
   
 configuration = CliConfiguration()
 reqHandler.nodes = configuration.nodes
+regHandler.cluster_name = configuration.cluster_name
 
 s = SocketServer.TCPServer( ("", configuration.server_port), reqHandler)
 s.serve_forever()
