@@ -22,7 +22,6 @@ Dependencies
 ~~~~~~~~~~~~
 
 - Python >2.6
-- libxml2 Python bindings.
     
 Credits
 ~~~~~~~
