@@ -11,21 +11,16 @@
 
 # Originally a perl script now rewritten in Python
 
-import sre
 import SocketServer
 import socket
 import argparse
+import libxml2
 
 class queryGmond:
   """Query individual nodes for gmond data and optionally gmond header"""
-  def __init__(self, nodeip, gmondport, queryHeader = False):
+  def __init__(self, nodeip, gmondport):
     self.nodeip = nodeip
-    self.nodedata = ""
     self.gmondport = gmondport
-    self.queryHeader = queryHeader
-    self.header = ""
-    self.datapat = sre.compile("<HOST NAME=\"[\w\.]+\" IP=\"%s\".*?</HOST>" % self.nodeip, sre.DOTALL)
-    self.headerpat = sre.compile("<\?xml version.*?<CLUSTER NAME=.*?>", sre.DOTALL)
 
   def readData(self):
     bufsize = 100000
@@ -42,13 +37,7 @@ class queryGmond:
 
   def run(self):
     try:
-      data = self.readData()
-      # extract information concerning this node from the data
-      self.nodedata = sre.findall(self.datapat, data)[0]
-      if (self.queryHeader):
-        # extract header
-        self.header = sre.findall(self.headerpat, data)[0]
-
+      return self.readData()
     except:
       print "Error fetching nodedata from node %s, port %d" % (self.nodeip, self.gmondport)
 
@@ -57,25 +46,30 @@ class reqHandler(SocketServer.StreamRequestHandler):
   
   def setup(self):
     self.qos = []
-    with_header = True
     
     for host, port in self.nodes.iteritems():
-      self.qos.append(queryGmond(host, gmondport = port, queryHeader = with_header))
-      with_header = False
-      
+      self.qos.append(queryGmond(host, gmondport = port))
+    
     self.wfile = self.request.makefile("wb", 0)
+    
   def handle(self):
-    self.qos[0].run()
-    #self.qos[0].join()
-    self.wfile.write(self.qos[0].header)
-    self.wfile.write(self.qos[0].nodedata)
-
-    for qo in self.qos[1:]: # run and wait queries this is faster
-      qo.run()
-      #qo.join()
-      self.wfile.write(qo.nodedata)
-
-    self.wfile.write("</CLUSTER>\n</GANGLIA_XML>\n")
+    doc = None
+    root = None
+    
+    for qo in self.qos: # run and wait queries this is faster
+      newdoc = libxml2.parseDoc(qo.run())
+      newroot = newdoc.getRootElement()
+      
+      if newroot:
+        if not root:
+          doc = newdoc
+          root = newroot
+        else:
+          root.addChildList(newroot.children.copyNodeList())
+          newdoc.freeDoc()
+      
+    self.wfile.write(doc)
+    
   def finish(self):
     self.wfile.flush()
     self.wfile.close()
@@ -99,9 +93,9 @@ class CliConfiguration:
     for node in nodes:
       host, port = node.split(':')
       if(len(port) > 0):
-        nodes_with_ports[host] = port
+        nodes_with_ports[host] = int(port)
       else:
-        nodes_with_ports[host] = default_port
+        nodes_with_ports[host] = int(default_port)
     
     return nodes_with_ports
 
