@@ -15,7 +15,7 @@ CLUSTER_NAME=""
 
 test -x $DAEMON || exit 0
 
-[ -f /etc/default/$NAME ] && . /etc/default/$NAME 
+[ -f /etc/default/ganglia-proxy-aggregator ] && . /etc/default/ganglia-proxy-aggregator 
 
 . /lib/lsb/init-functions
 
