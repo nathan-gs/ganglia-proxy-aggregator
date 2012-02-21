@@ -92,7 +92,13 @@ class CliConfiguration:
     
     self.nodes = self._parse_nodes(args.nodes, args.default_port)
     self.server_port = args.server_port
-    self.cluster_name = args.cluster_name
+    cluster_name = args.cluster_name
+    
+    if not cluster_name:
+      if len(cluster_name) == 0:
+        cluster_name = None
+        
+    self.cluster_name = cluster_name
     
   def _parse_nodes(self, nodes, default_port):
     nodes_with_ports = {}

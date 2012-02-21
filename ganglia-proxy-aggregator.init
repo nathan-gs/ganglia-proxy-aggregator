@@ -1,0 +1,65 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          ganglia-proxy-aggregator
+# Required-Start:    $network $named $remote_fs $syslog
+# Required-Stop:     $network $named $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+### END INIT INFO
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/bin/ganglia-proxy-aggregator.py
+NAME=ganglia-proxy-aggregator.py
+USER=ganglia-pa
+DESC="Ganglia Proxy & Aggregator Daemon"
+CLUSTER_NAME=""
+
+test -x $DAEMON || exit 0
+
+[ -f /etc/default/$NAME ] && . /etc/default/$NAME 
+
+. /lib/lsb/init-functions
+
+set -e
+
+case "$1" in
+  start)
+        echo -n "Starting $DESC: "
+        start-stop-daemon --start --chuid $USER \
+                --make-pidfile \
+                --pidfile /var/run/$NAME.pid \
+                --background \
+                --quiet \
+                --exec $DAEMON -- \
+                --cluster-name=$CLUSTER_NAME \
+                $HOSTS
+        # http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=651284
+        echo "$NAME."
+        ;;
+  stop)
+        echo -n "Stopping $DESC: "
+        start-stop-daemon --stop \
+                --quiet \
+                --oknodo \
+                --pidfile /var/run/$NAME.pid \
+                --name $NAME \
+                2>&1 > /dev/null
+        echo "$NAME."
+        ;;
+  reload)
+  ;;
+  restart|force-reload)
+        $0 stop
+        $0 start
+        ;;
+  status)
+        status_of_proc -p /var/run/$NAME.pid "$DAEMON" $NAME && exit 0 || exit $?
+        ;;
+  *)
+        N=/etc/init.d/$NAME
+        # echo "Usage: $N {start|stop|restart|reload|force-reload}" >&2
+        echo "Usage: $N {start|stop|restart|force-reload|status}" >&2
+        exit 1
+        ;;
+esac
+
+exit 0

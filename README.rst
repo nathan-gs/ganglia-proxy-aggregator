@@ -17,6 +17,14 @@ Advanced usages
     
 The options can be mixed.
 
+Running as a daemon
+~~~~~~~~~~~~~~~~~~~
+
+It uses the upstart system of Ubuntu. Copy following files::
+    
+    ganglia-proxy-aggregator.default -> /etc/default/ganglia-proxy-aggregator
+    ganglia-proxy-aggregator.init -> /etc/init.d/ganglia-proxy-aggregator
+    ganglia-proxy-aggregator.py -> /usr/bin/ganglia-proxy-aggregator.py
 
 Dependencies
 ~~~~~~~~~~~~
@@ -27,6 +35,8 @@ Credits
 ~~~~~~~
 
 Fork of ganglia-multicast-hack, found on http://code.google.com/p/ganglia-multicast-hack/
+
+replaced the regex with xml dom parsing & added cli arguments.
 
 - Antti Vanne <antti.vanne@iki.fi>
 - Nathan Bijnens <nathan@nathan.gs>
