@@ -104,11 +104,13 @@ class CliConfiguration:
     nodes_with_ports = {}
     
     for node in nodes:
-      host, port = node.split(':')
-      if(len(port) > 0):
-        nodes_with_ports[host] = int(port)
+      if ":" in node:
+        host, port = node.split(':')
       else:
-        nodes_with_ports[host] = int(default_port)
+        port = default_port
+        host = node
+
+      nodes_with_ports[host] = int(port)
     
     return nodes_with_ports
 
