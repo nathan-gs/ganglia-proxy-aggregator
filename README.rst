@@ -20,7 +20,11 @@ The options can be mixed.
 Running as a daemon
 ~~~~~~~~~~~~~~~~~~~
 
-It uses the upstart system of Ubuntu. Copy following files::
+It uses the upstart system of Ubuntu.
+
+Create a ganglia-pa user.
+
+Copy following files::
     
     ganglia-proxy-aggregator.default -> /etc/default/ganglia-proxy-aggregator
     ganglia-proxy-aggregator.init -> /etc/init.d/ganglia-proxy-aggregator
